@@ -1,0 +1,9 @@
+name: preserve-whitespace
+version: "0.1.0"
+description: >-
+  Puts back the leading/trailing whitespace Hermes trims from assistant text before it is replayed
+  to the model on later turns, for the routes you list. Chat Completions and Responses API.
+  Whitespace only: a message is restored only when the stored text equals the model's raw text
+  with its outer whitespace removed; anything else is left exactly as Hermes sends it.
+author: ""
+provides_hooks: []
