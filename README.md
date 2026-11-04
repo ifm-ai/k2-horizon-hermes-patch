@@ -96,7 +96,7 @@ plugins:
         # providers: ["custom"]                 # optional, glob
         # base_urls: ["http://localhost:8000*"] # optional, glob
         # api_modes: [chat_completions, codex_responses]   # default
-        # persist: true          # keep records across restarts (default true)
+        # persist: false         # true = also keep records on disk across restarts (default false)
         # retain_days: 30        # prune older records at startup (default 30)
         # all_routes: false      # true = apply to every route (not recommended)
         # enabled: true
@@ -122,8 +122,10 @@ Each request where the plugin restored text carries a trace entry like this:
 {"source": "preserve-whitespace", "reason": "restored outer whitespace on 1 assistant text(s)"}
 ```
 
-Records are stored in `~/.hermes/plugin-data/preserve-whitespace/records.db` (SQLite, one row per
-recorded text).
+By default records are kept in memory only and are gone when Hermes exits. With `persist: true`
+they are also written to `~/.hermes/plugin-data/preserve-whitespace/records.db` (SQLite, one row per
+recorded text) and pruned after `retain_days`. That file holds the model's raw replies, unredacted,
+so only turn it on where that is acceptable.
 
 ## Limitations
 
@@ -146,7 +148,9 @@ recorded text).
   restored. Hermes stores those as empty, and its empty-turn handling owns them.
 - **Calls that bypass middleware.** The iteration-summary call builds its request without request
   middleware, so it still sees trimmed text. It's a one-off call at the iteration limit.
-- **Sessions without an id** (some auxiliary or one-shot calls) keep their records in memory only.
+- **Resumed sessions** (after a Hermes restart) are only restored with `persist: true`. Without it,
+  turns from before the restart are sent trimmed. Sessions without an id (some auxiliary or one-shot
+  calls) are always kept in memory only.
 - **Cost:** Hermes deep-copies the request for each request middleware, which adds a little work
   per call on listed routes. Prompt caching is unaffected, because the restored bytes are the same
   on every turn.

@@ -61,7 +61,7 @@ class _Plugin:
         if self._store is None:
             cfg = self.settings()
             db_path: Optional[Path] = None
-            if cfg.get("persist", True):
+            if cfg.get("persist", False):
                 try:
                     from plugins.plugin_storage import plugin_data_dir
                     db_path = plugin_data_dir(PLUGIN_NAME) / "records.db"
