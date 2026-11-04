@@ -77,7 +77,7 @@ It also never touches:
 ## Install
 
 ```bash
-hermes plugins install <org>/preserve-whitespace --no-enable
+hermes plugins install ifm-ai/k2-horizon-hermes-patch --no-enable
 hermes plugins enable preserve-whitespace
 ```
 
